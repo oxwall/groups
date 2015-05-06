@@ -125,11 +125,11 @@ class GROUPS_CLASS_ConsoleBridge
 
         $data['toolbar'] = array(
             array(
-                'label' => 'accept',
+                'label' => OW::getLanguage()->text('groups', 'invite_accept_label'),
                 'id'=> 'toolbar_accept_' . $itemKey
             ),
             array(
-                'label' => 'ignore',
+                'label' => OW::getLanguage()->text('groups', 'invite_decline_label'),
                 'id'=> 'toolbar_ignore_' . $itemKey
             )
         );
