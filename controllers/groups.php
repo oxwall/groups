@@ -1329,8 +1329,9 @@ class GROUPS_GroupForm extends Form
 
         $image = new UTIL_Image($postFile['tmp_name']);
         $image->resizeImage(GROUPS_BOL_Service::IMAGE_WIDTH_BIG, null)
-            ->saveImage($bigTmpFile)
-            ->resizeImage(GROUPS_BOL_Service::IMAGE_WIDTH_SMALL, GROUPS_BOL_Service::IMAGE_WIDTH_SMALL, true)
+            ->saveImage($bigTmpFile);
+        $image = new UTIL_Image($postFile['tmp_name']);
+        $image->resizeImage(GROUPS_BOL_Service::IMAGE_WIDTH_SMALL, GROUPS_BOL_Service::IMAGE_WIDTH_SMALL, true)
             ->saveImage($smallTmpFile);
 
         try
