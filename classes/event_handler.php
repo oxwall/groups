@@ -306,8 +306,6 @@ class GROUPS_CLASS_EventHandler
 
         $data = array(
             'params' => array(
-                'feedType' => 'groups',
-                'feedId' => $groupId,
                 'visibility' => $visibility,
                 'postOnUserFeed' => !$private
             ),
@@ -390,9 +388,7 @@ class GROUPS_CLASS_EventHandler
             'entityId' => $group->id,
             'entityType' => GROUPS_BOL_Service::FEED_ENTITY_TYPE,
             'userId' => $userId,
-            'pluginKey' => 'groups',
-            'feedType' => 'groups',
-            'feedId' => $group->id
+            'pluginKey' => 'groups'
         ), array(
             'groupId' => $group->id,
             'userId' => $userId,
