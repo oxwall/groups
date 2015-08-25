@@ -1391,8 +1391,6 @@ class GROUPS_CreateGroupForm extends GROUPS_GroupForm
 
         $group = $this->processGroup($groupDto);
         
-        BOL_AuthorizationService::getInstance()->trackAction('groups', 'create');
-
         $is_forum_connected = OW::getConfig()->getValue('groups', 'is_forum_connected');
         // Add forum group
         if ( $is_forum_connected )
@@ -1403,10 +1401,17 @@ class GROUPS_CreateGroupForm extends GROUPS_GroupForm
         
         if ( $group )
         {
-            $event = new OW_Event(GROUPS_BOL_Service::EVENT_CREATE, array('groupId' => $groupDto->id));
+            $event = new OW_Event(GROUPS_BOL_Service::EVENT_CREATE, array('groupId' => $group->id));
             OW::getEventManager()->trigger($event);
         }
-
+        
+        $group = GROUPS_BOL_Service::getInstance()->findGroupById($group->id);
+        
+        if ( $group->status == GROUPS_BOL_Group::STATUS_ACTIVE )
+        {
+            BOL_AuthorizationService::getInstance()->trackAction('groups', 'create');
+        }
+        
         return $group;
     }
 }

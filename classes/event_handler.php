@@ -1064,7 +1064,30 @@ class GROUPS_CLASS_EventHandler
             'entityType' => GROUPS_BOL_Service::FEED_ENTITY_TYPE
         ));
     }
-
+    
+    public function afterContentApprove( OW_Event $event )
+    {
+        $params = $event->getParams();
+        
+        if ( $params["entityType"] != GROUPS_BOL_Service::FEED_ENTITY_TYPE )
+        {
+            return;
+        }
+        
+        if ( !$params["isNew"] )
+        {
+            return;
+        }
+        
+        $group = GROUPS_BOL_Service::getInstance()->findGroupById($params["entityId"]);
+        
+        if ( $group === null )
+        {
+            return;
+        }
+        
+        BOL_AuthorizationService::getInstance()->trackActionForUser($group->userId, 'groups', 'create');
+    }
     
     public function genericInit()
     {
@@ -1112,5 +1135,7 @@ class GROUPS_CLASS_EventHandler
         OW::getEventManager()->bind(BASE_CMP_AddNewContent::EVENT_NAME, array($this, 'onAddNewContent'));
         
         OW::getEventManager()->bind(GROUPS_BOL_Service::EVENT_USER_DELETED, array($eventHandler, "afterUserLeave"));
+        
+        OW::getEventManager()->bind("moderation.after_content_approve", array($eventHandler, "afterContentApprove"));
     }
 }
