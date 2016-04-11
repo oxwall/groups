@@ -40,7 +40,7 @@
                    <div class="clearfix ow_smallmargin">
                        <div class="ow_lp_wrapper">
                            <a href="{$item.url}">
-                                <img title="{$item.title}" src="{$item.image}" width="75" />
+                                <img title="{$item.title|escape}" alt="{$item.title|escape}" src="{$item.image}" width="75" />
                            </a>
                        </div>
                        <div class="ow_lp_label ow_small">
@@ -54,7 +54,9 @@
                 <div class="ow_center">
                 {strip}
                 {foreach from=$popular item='item'}
-                    <a class="ow_lp_wrapper_inline" href="{$item.url}"><img title="{$item.title}" src="{$item.image}" width="75" /></a>
+                    <a class="ow_lp_wrapper_inline" href="{$item.url}">
+                        <img title="{$item.title|escape}" alt="{$item.title|escape}" src="{$item.image}" width="75" />
+                    </a>
                 {/foreach}
                 {/strip}
                 </div>
@@ -67,7 +69,7 @@
                    <div class="clearfix ow_smallmargin">
                        <div class="ow_lp_wrapper">
                            <a href="{$item.url}">
-                                <img title="{$item.title}" src="{$item.image}" width="75" />
+                                <img title="{$item.title|escape}" alt="{$item.title|escape}" src="{$item.image}" width="75" />
                            </a>
                        </div>
                        <div class="ow_lp_label ow_small">
@@ -81,7 +83,9 @@
                 <div class="ow_center ">
                 {strip}
                 {foreach from=$latest item='item'}
-                    <a class="ow_lp_wrapper_inline" href="{$item.url}"><img title="{$item.title}" src="{$item.image}" width="75" /></a>
+                    <a class="ow_lp_wrapper_inline" href="{$item.url}">
+                        <img title="{$item.title|escape}" alt="{$item.title|escape}" src="{$item.image}" width="75" />
+                    </a>
                 {/foreach}
                 </div>
                 {/strip}

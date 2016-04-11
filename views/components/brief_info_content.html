@@ -31,7 +31,7 @@
 <div class="ow_group_brief_info clearfix ow_smallmargin">
     {if $group.imgUrl}
         <div class="image ow_left">
-            <a href="{$group.url}"><img src="{$group.imgUrl}" /></a>
+            <a href="{$group.url}"><img src="{$group.imgUrl}" alt="{$group.title|escape}" /></a>
         </div>
         <div class="details" style="margin-left: 100px;">
     {else}
@@ -54,5 +54,5 @@
 <div class="clearfix">
     {add_content key='groups.brief_info.content.after_group_description'}
 </div>
-  
+
 {/block_decorator}
