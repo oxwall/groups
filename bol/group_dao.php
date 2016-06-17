@@ -94,7 +94,7 @@ class GROUPS_BOL_GroupDao extends OW_BaseDao
 
         $query = "SELECT `g`.* FROM `" . $this->getTableName() . "` AS `g`
             $where g.status=:s
-            GROUP BY `g`.`userId` ORDER `g`.`timeStamp` DESC LIMIT :f, :c";
+            GROUP BY `g`.`userId` ORDER BY `g`.`timeStamp` DESC LIMIT :f, :c";
 
         return $this->dbo->queryForObjectList($query, $this->getDtoClassName(), array(
             'f' => $first,
