@@ -550,9 +550,9 @@ class GROUPS_BOL_Service
         return $this->groupDao->findUserInvitedGroupsCount($userId, $newOnly);
     }
 
-    public function findLatestGroupsUserList( $first, $count, $privacy = self::PRIVACY_EVERYBODY )
+    public function findLatestGroupAuthors( $first, $count )
     {
-        return $this->groupUserDao->findLatestGroupsUserList($first, $count, $privacy);
+        return $this->groupDao->findLatestGroupAuthors($first, $count);
     }
 
     public function findAllGroupsUserList()

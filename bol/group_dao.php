@@ -83,6 +83,26 @@ class GROUPS_BOL_GroupDao extends OW_BaseDao
         return OW_DB_PREFIX . 'groups_group';
     }
 
+    public function findLatestGroupAuthors($first, $count)
+    {
+        $where = 'WHERE';
+
+        if ( !OW::getUser()->isAuthorized('groups') ) //TODO TEMP Hack - checking if current user is moderator
+        {
+            $where .= ' g.whoCanView="' . GROUPS_BOL_Service::WCV_ANYONE . '" AND';
+        }
+
+        $query = "SELECT `g`.* FROM `" . $this->getTableName() . "` AS `g`
+            $where g.status=:s
+            GROUP BY `g`.`userId` ORDER `g`.`timeStamp` DESC LIMIT :f, :c";
+
+        return $this->dbo->queryForObjectList($query, $this->getDtoClassName(), array(
+            'f' => $first,
+            'c' => $count,
+            's' => GROUPS_BOL_Group::STATUS_ACTIVE
+        ));
+    }
+
     //TODO Privacy filter
     public function findOrderedList( $first, $count )
     {
@@ -101,6 +121,23 @@ class GROUPS_BOL_GroupDao extends OW_BaseDao
         return $this->findListByExample($example, self::LIST_CACHE_LIFETIME, array( self::LIST_CACHE_TAG, self::LIST_CACHE_TAG_LATEST ));
     }
 
+    /*
+     *     public function findLatestGroupsUserList( $first, $count, $privacy )
+    {
+        $queryParts = BOL_UserDao::getInstance()->getUserQueryFilter("u", "userId", array(
+            "method" => "GROUPS_BOL_GroupUserDao::findLatestGroupsUserList"
+        ));
+
+        $query = "SELECT u.* FROM " . $this->getTableName() . " u " . $queryParts["join"]
+            . " WHERE " . $queryParts["where"] . " AND u.privacy=:p GROUP BY u.userId ORDER BY u.timeStamp DESC LIMIT :lf, :lc";
+
+        return $this->dbo->queryForObjectList($query, $this->getDtoClassName(), array(
+            "p" => $privacy,
+            "lf" => $first,
+            "lc" => $count
+        ));
+    }
+     * */
     public function findLimitedList( $count )
     {
         $example = new OW_Example();

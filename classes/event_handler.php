@@ -1103,9 +1103,9 @@ class GROUPS_CLASS_EventHandler
         {
             switch ( $params['entity'] )
             {
-                case 'groups_users' :
+                case 'groups_authors' :
                     $urls   = [];
-                    $users  = GROUPS_BOL_Service::getInstance()->findLatestGroupsUserList(0, $params['limit']);
+                    $users  = GROUPS_BOL_Service::getInstance()->findLatestGroupAuthors(0, $params['limit']);
 
                     foreach ( $users as $user )
                     {
