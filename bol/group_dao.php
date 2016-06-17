@@ -121,23 +121,6 @@ class GROUPS_BOL_GroupDao extends OW_BaseDao
         return $this->findListByExample($example, self::LIST_CACHE_LIFETIME, array( self::LIST_CACHE_TAG, self::LIST_CACHE_TAG_LATEST ));
     }
 
-    /*
-     *     public function findLatestGroupsUserList( $first, $count, $privacy )
-    {
-        $queryParts = BOL_UserDao::getInstance()->getUserQueryFilter("u", "userId", array(
-            "method" => "GROUPS_BOL_GroupUserDao::findLatestGroupsUserList"
-        ));
-
-        $query = "SELECT u.* FROM " . $this->getTableName() . " u " . $queryParts["join"]
-            . " WHERE " . $queryParts["where"] . " AND u.privacy=:p GROUP BY u.userId ORDER BY u.timeStamp DESC LIMIT :lf, :lc";
-
-        return $this->dbo->queryForObjectList($query, $this->getDtoClassName(), array(
-            "p" => $privacy,
-            "lf" => $first,
-            "lc" => $count
-        ));
-    }
-     * */
     public function findLimitedList( $count )
     {
         $example = new OW_Example();
