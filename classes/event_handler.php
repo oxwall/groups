@@ -1109,8 +1109,15 @@ class GROUPS_CLASS_EventHandler
 
                     foreach ( $users as $userId )
                     {
+                        $userName = BOL_UserService::getInstance()->getUsername($userId);
+
+                        if ( !$userName )
+                        {
+                            continue;
+                        }
+
                         $urls[] = OW::getRouter()->urlForRoute('groups-user-groups', array(
-                            'user' =>  BOL_UserService::getInstance()->getUserName($userId)
+                            'user' =>  $userName
                         ));
                     }
 
