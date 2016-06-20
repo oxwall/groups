@@ -550,6 +550,18 @@ class GROUPS_BOL_Service
         return $this->groupDao->findUserInvitedGroupsCount($userId, $newOnly);
     }
 
+    /**
+     * Find latest group authors ids
+     *
+     * @param integer $first
+     * @param integer $count
+     * @return array
+     */
+    public function findLatestGroupAuthorsIds($first, $count)
+    {
+        return $this->groupDao->findLatestGroupAuthorsIds($first, $count);
+    }
+
     public function findAllGroupsUserList()
     {
         $users = $this->groupUserDao->findAll();

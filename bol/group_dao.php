@@ -83,6 +83,33 @@ class GROUPS_BOL_GroupDao extends OW_BaseDao
         return OW_DB_PREFIX . 'groups_group';
     }
 
+    /**
+     * Find latest group authors ids
+     *
+     * @param integer $first
+     * @param integer $count
+     * @return array
+     */
+    public function findLatestGroupAuthorsIds($first, $count)
+    {
+        $where = 'WHERE';
+
+        if ( !OW::getUser()->isAuthorized('groups') ) //TODO TEMP Hack - checking if current user is moderator
+        {
+            $where .= ' `g`.`whoCanView`="' . GROUPS_BOL_Service::WCV_ANYONE . '" AND';
+        }
+
+        $query = "SELECT `g`.`userId` FROM `" . $this->getTableName() . "` AS `g`
+            $where `g`.`status`=:s
+            GROUP BY `g`.`userId` ORDER BY `g`.`timeStamp` DESC LIMIT :f, :c";
+
+        return $this->dbo->queryForColumnList($query, array(
+            'f' => $first,
+            'c' => $count,
+            's' => GROUPS_BOL_Group::STATUS_ACTIVE
+        ));
+    }
+
     //TODO Privacy filter
     public function findOrderedList( $first, $count )
     {
