@@ -1105,17 +1105,11 @@ class GROUPS_CLASS_EventHandler
             {
                 case 'groups_authors' :
                     $urls   = [];
-                    $users  = GROUPS_BOL_Service::getInstance()->findLatestGroupAuthorsIds(0, $params['limit']);
+                    $usersIds  = GROUPS_BOL_Service::getInstance()->findLatestGroupAuthorsIds(0, $params['limit']);
+                    $userNames = BOL_UserService::getInstance()->getUserNamesForList($usersIds);
 
-                    foreach ( $users as $userId )
+                    foreach ( array_filter($userNames) as $userName )
                     {
-                        $userName = BOL_UserService::getInstance()->getUsername($userId);
-
-                        if ( !$userName )
-                        {
-                            continue;
-                        }
-
                         $urls[] = OW::getRouter()->urlForRoute('groups-user-groups', array(
                             'user' =>  $userName
                         ));
