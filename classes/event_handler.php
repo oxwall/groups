@@ -1101,88 +1101,53 @@ class GROUPS_CLASS_EventHandler
 
         if ( OW::getUser()->isAuthorized('groups', 'view') )
         {
-            $urls = [];
-            $urlsCount = 0;
-            $globalLimit = (int)$params['limit'];
-            $localLimit = 500;
-            $offset = 0;
+            $offset = (int) $params['offset'];
+            $limit  = (int) $params['limit'];
+            $urls   = array();
 
-            do
+            switch ( $params['entity'] )
             {
-                $isDataEmpty = true;
+                case 'groups_authors' :
+                    $usersIds  = GROUPS_BOL_Service::getInstance()->findLatestGroupAuthorsIds($offset, $limit);
+                    $userNames = BOL_UserService::getInstance()->getUserNamesForList($usersIds);
 
-                if ( $urlsCount + $localLimit > $globalLimit )
-                {
-                    $localLimit = $globalLimit < $localLimit
-                        ? $globalLimit
-                        : $globalLimit - $urlsCount;
-                }
+                    // skip deleted users
+                    foreach ( array_filter($userNames) as $userName )
+                    {
+                        $urls[] = OW::getRouter()->urlForRoute('groups-user-groups', array(
+                            'user' => $userName
+                        ));
+                    }
+                    break;
 
-                switch ( $params['entity'] )
-                {
-                    case 'groups_authors' :
-                        $usersIds  = GROUPS_BOL_Service::getInstance()->findLatestGroupAuthorsIds($offset, $localLimit);
-                        $userNames = BOL_UserService::getInstance()->getUserNamesForList($usersIds);
+                case 'groups_user_list' :
+                    $groups = GROUPS_BOL_Service::getInstance()->findGroupList(GROUPS_BOL_Service::LIST_LATEST, $offset, $limit);
 
-                        if ( $usersIds )
-                        {
-                            // skip deleted users
-                            foreach ( array_filter($userNames) as $userName )
-                            {
-                                $urls[] = OW::getRouter()->urlForRoute('groups-user-groups', array(
-                                    'user' => $userName
-                                ));
-                            }
+                    foreach ( $groups as $group )
+                    {
+                        $urls[] = OW::getRouter()->urlForRoute('groups-user-list', array(
+                            'groupId' => $group->id
+                        ));
+                    }
+                    break;
 
-                            $isDataEmpty = count($usersIds) != $localLimit;
-                        }
-                        break;
+                case 'groups' :
+                    $groups = GROUPS_BOL_Service::getInstance()->findGroupList(GROUPS_BOL_Service::LIST_LATEST, $offset, $limit);
 
-                    case 'groups_user_list' :
-                        $groups = GROUPS_BOL_Service::getInstance()->findGroupList(GROUPS_BOL_Service::LIST_LATEST, $offset, $localLimit);
+                    foreach ( $groups as $group )
+                    {
+                        $urls[] = OW::getRouter()->urlForRoute('groups-view', array(
+                            'groupId' => $group->id
+                        ));
+                    }
+                    break;
 
-                        if ( $groups )
-                        {
-                            foreach ( $groups as $group )
-                            {
-                                $urls[] = OW::getRouter()->urlForRoute('groups-user-list', array(
-                                    'groupId' => $group->id
-                                ));
-                            }
-
-                            $isDataEmpty = count($groups) != $localLimit;
-                        }
-                        break;
-
-                    case 'groups' :
-                        $groups = GROUPS_BOL_Service::getInstance()->findGroupList(GROUPS_BOL_Service::LIST_LATEST, $offset, $localLimit);
-
-                        if ( $groups )
-                        {
-                            foreach ( $groups as $group )
-                            {
-                                $urls[] = OW::getRouter()->urlForRoute('groups-view', array(
-                                    'groupId' => $group->id
-                                ));
-                            }
-
-                            $isDataEmpty = count($groups) != $localLimit;
-                        }
-                        break;
-
-                    case 'groups_list' :
-                        $urls = array(
-                            OW::getRouter()->urlForRoute('groups-index'),
-                            OW::getRouter()->urlForRoute('groups-most-popular'),
-                            OW::getRouter()->urlForRoute('groups-latest')
-                        );
-                        break;
-                }
-
-                $urlsCount = count($urls);
-                $offset += $localLimit;
+                case 'groups_list' :
+                    $urls[] = OW::getRouter()->urlForRoute('groups-index');
+                    $urls[] = OW::getRouter()->urlForRoute('groups-most-popular');
+                    $urls[] = OW::getRouter()->urlForRoute('groups-latest');
+                    break;
             }
-            while ($urlsCount < $globalLimit && !$isDataEmpty);
 
             if ( $urls )
             {
