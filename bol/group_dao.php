@@ -110,6 +110,30 @@ class GROUPS_BOL_GroupDao extends OW_BaseDao
         ));
     }
 
+    /**
+     * Find latest public group list ids
+     *
+     * @param integer $first
+     * @param integer $count
+     * @return array
+     */
+    public function findLatestPublicGroupListIds( $first, $count )
+    {
+        $example = new OW_Example();
+
+        $example->setOrder('`timeStamp` DESC');
+        $example->setLimitClause($first, $count);
+
+        if ( !OW::getUser()->isAuthorized('groups') ) //TODO TEMP Hack - checking if current user is moderator
+        {
+            $example->andFieldEqual('whoCanView', GROUPS_BOL_Service::WCV_ANYONE);
+        }
+
+        $example->andFieldEqual("status", GROUPS_BOL_Group::STATUS_ACTIVE);
+
+        return $this->findIdListByExample($example);
+    }
+
     //TODO Privacy filter
     public function findOrderedList( $first, $count )
     {
