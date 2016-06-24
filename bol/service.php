@@ -216,6 +216,18 @@ class GROUPS_BOL_Service
         return $this->groupDao->findByIdList($groupIds);
     }
 
+    /**
+     * Find latest public group list ids
+     *
+     * @param integer $first
+     * @param integer $count
+     * @return array
+     */
+    public function findLatestPublicGroupListIds($first, $count)
+    {
+        return $this->groupDao->findLatestPublicGroupListIds($first, $count);
+    }
+
     public function findGroupList( $listType, $first=null, $count=null )
     {
         switch ( $listType )

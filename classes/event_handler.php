@@ -1121,23 +1121,23 @@ class GROUPS_CLASS_EventHandler
                     break;
 
                 case 'groups_user_list' :
-                    $groups = GROUPS_BOL_Service::getInstance()->findGroupList(GROUPS_BOL_Service::LIST_LATEST, $offset, $limit);
+                    $groups = GROUPS_BOL_Service::getInstance()->findLatestPublicGroupListIds($offset, $limit);
 
-                    foreach ( $groups as $group )
+                    foreach ( $groups as $groupId )
                     {
                         $urls[] = OW::getRouter()->urlForRoute('groups-user-list', array(
-                            'groupId' => $group->id
+                            'groupId' => $groupId
                         ));
                     }
                     break;
 
                 case 'groups' :
-                    $groups = GROUPS_BOL_Service::getInstance()->findGroupList(GROUPS_BOL_Service::LIST_LATEST, $offset, $limit);
+                    $groups = GROUPS_BOL_Service::getInstance()->findLatestPublicGroupListIds($offset, $limit);
 
-                    foreach ( $groups as $group )
+                    foreach ( $groups as $groupId )
                     {
                         $urls[] = OW::getRouter()->urlForRoute('groups-view', array(
-                            'groupId' => $group->id
+                            'groupId' => $groupId
                         ));
                     }
                     break;
