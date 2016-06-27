@@ -1156,6 +1156,76 @@ class GROUPS_CLASS_EventHandler
         }
     }
 
+    public function onCollectMetaData( BASE_CLASS_EventCollector $e )
+    {
+        $language = OW::getLanguage();
+
+        $items = array(
+            array(
+                "entityKey" => "mostPopular",
+                "entityLabel" => $language->text("groups", "seo_meta_most_popular_label"),
+                "iconClass" => "ow_ic_heart",
+                "langs" => array(
+                    "title" => "groups+meta_title_most_popular",
+                    "description" => "groups+meta_desc_most_popular",
+                    "keywords" => "groups+meta_keywords_most_popular"
+                ),
+                "vars" => array("site_name")
+            ),
+            array(
+                "entityKey" => "latest",
+                "entityLabel" => $language->text("groups", "seo_meta_latest_label"),
+                "iconClass" => "ow_ic_clock",
+                "langs" => array(
+                    "title" => "groups+meta_title_latest",
+                    "description" => "groups+meta_desc_latest",
+                    "keywords" => "groups+meta_keywords_latest"
+                ),
+                "vars" => array("site_name")
+            ),
+            array(
+                "entityKey" => "userGroups",
+                "entityLabel" => $language->text("groups", "seo_meta_user_groups_label"),
+                "iconClass" => "ow_ic_clock",
+                "langs" => array(
+                    "title" => "groups+meta_title_user_groups",
+                    "description" => "groups+meta_desc_user_groups",
+                    "keywords" => "groups+meta_keywords_user_groups"
+                ),
+                "vars" => array("site_name")
+            ),
+            array(
+                "entityKey" => "groupPage",
+                "entityLabel" => $language->text("groups", "seo_meta_groups_page_label"),
+                "iconClass" => "ow_ic_groups",
+                "langs" => array(
+                    "title" => "groups+meta_title_groups_page",
+                    "description" => "groups+meta_desc_groups_page",
+                    "keywords" => "groups+meta_keywords_groups_page"
+                ),
+                "vars" => array("site_name", "group_title", "group_description")
+            ),
+            array(
+                "entityKey" => "groupUsers",
+                "entityLabel" => $language->text("groups", "seo_meta_group_users_label"),
+                "iconClass" => "ow_ic_groups",
+                "langs" => array(
+                    "title" => "groups+meta_title_group_users",
+                    "description" => "groups+meta_desc_group_users",
+                    "keywords" => "groups+meta_keywords_group_users"
+                ),
+                "vars" => array("site_name", "group_name")
+            ),
+        );
+
+        foreach ($items as &$item)
+        {
+            $item["sectionLabel"] = $language->text("groups", "seo_meta_section");
+            $item["sectionKey"] = "groups";
+            $e->add($item);
+        }
+    }
+
     public function genericInit()
     {
         $eventHandler = $this;
