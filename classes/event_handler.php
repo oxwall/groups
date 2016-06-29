@@ -1099,7 +1099,7 @@ class GROUPS_CLASS_EventHandler
     {
         $params = $event->getParams();
 
-        if ( OW::getUser()->isAuthorized('groups', 'view') )
+        if ( BOL_AuthorizationService::getInstance()->isActionAuthorizedForGuest('groups', 'view') )
         {
             $offset = (int) $params['offset'];
             $limit  = (int) $params['limit'];
