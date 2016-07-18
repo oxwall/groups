@@ -28,10 +28,13 @@
  * AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-OW::getNavigation()->deleteMenuItem('groups', 'main_menu_list');
 
-BOL_ComponentAdminService::getInstance()->deleteWidget('GROUPS_CMP_UserGroupsWidget');
-BOL_ComponentAdminService::getInstance()->deleteWidget('GROUPS_CMP_GroupsWidget');
+// register sitemap entities
+Updater::getSeoService()->addSitemapEntity('groups', 'groups_sitemap', 'groups', array(
+    'groups_list',
+    'groups',
+    'groups_user_list',
+    'groups_authors'
+), 'groups_sitemap_desc');
 
-// remove from sitemap
-BOL_SeoService::getInstance()->removeSitemapEntity('groups');
+Updater::getLanguageService()->importPrefixFromZip(__DIR__ . DS . 'langs.zip', 'groups');

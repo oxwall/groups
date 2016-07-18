@@ -80,3 +80,12 @@ if ( OW::getConfig()->getValue('groups', 'is_forum_connected') )
 require_once dirname(__FILE__) . DS .  'classes' . DS . 'credits.php';
 $credits = new GROUPS_CLASS_Credits();
 $credits->triggerCreditActionsAdd();
+
+
+// register sitemap entities
+BOL_SeoService::getInstance()->addSitemapEntity('groups', 'groups_sitemap', 'groups', array(
+    'groups_list',
+    'groups',
+    'groups_user_list',
+    'groups_authors'
+), 'groups_sitemap_desc');

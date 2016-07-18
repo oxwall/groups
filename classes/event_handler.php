@@ -1088,7 +1088,74 @@ class GROUPS_CLASS_EventHandler
         
         BOL_AuthorizationService::getInstance()->trackActionForUser($group->userId, 'groups', 'create');
     }
-    
+
+    /**
+     * Get sitemap urls
+     *
+     * @param OW_Event $event
+     * @return void
+     */
+    public function onSitemapGetUrls( OW_Event $event )
+    {
+        $params = $event->getParams();
+
+        if ( BOL_AuthorizationService::getInstance()->isActionAuthorizedForGuest('groups', 'view') )
+        {
+            $offset = (int) $params['offset'];
+            $limit  = (int) $params['limit'];
+            $urls   = array();
+
+            switch ( $params['entity'] )
+            {
+                case 'groups_authors' :
+                    $usersIds  = GROUPS_BOL_Service::getInstance()->findLatestGroupAuthorsIds($offset, $limit);
+                    $userNames = BOL_UserService::getInstance()->getUserNamesForList($usersIds);
+
+                    // skip deleted users
+                    foreach ( array_filter($userNames) as $userName )
+                    {
+                        $urls[] = OW::getRouter()->urlForRoute('groups-user-groups', array(
+                            'user' => $userName
+                        ));
+                    }
+                    break;
+
+                case 'groups_user_list' :
+                    $groups = GROUPS_BOL_Service::getInstance()->findLatestPublicGroupListIds($offset, $limit);
+
+                    foreach ( $groups as $groupId )
+                    {
+                        $urls[] = OW::getRouter()->urlForRoute('groups-user-list', array(
+                            'groupId' => $groupId
+                        ));
+                    }
+                    break;
+
+                case 'groups' :
+                    $groups = GROUPS_BOL_Service::getInstance()->findLatestPublicGroupListIds($offset, $limit);
+
+                    foreach ( $groups as $groupId )
+                    {
+                        $urls[] = OW::getRouter()->urlForRoute('groups-view', array(
+                            'groupId' => $groupId
+                        ));
+                    }
+                    break;
+
+                case 'groups_list' :
+                    $urls[] = OW::getRouter()->urlForRoute('groups-index');
+                    $urls[] = OW::getRouter()->urlForRoute('groups-most-popular');
+                    $urls[] = OW::getRouter()->urlForRoute('groups-latest');
+                    break;
+            }
+
+            if ( $urls )
+            {
+                $event->setData($urls);
+            }
+        }
+    }
+
     public function genericInit()
     {
         $eventHandler = $this;
@@ -1137,5 +1204,6 @@ class GROUPS_CLASS_EventHandler
         OW::getEventManager()->bind(GROUPS_BOL_Service::EVENT_USER_DELETED, array($eventHandler, "afterUserLeave"));
         
         OW::getEventManager()->bind("moderation.after_content_approve", array($eventHandler, "afterContentApprove"));
+        OW::getEventManager()->bind("base.sitemap.get_urls", array($this, 'onSitemapGetUrls'));
     }
 }
