@@ -74,6 +74,7 @@ OW::getEventManager()->bind('feed.on_item_render', array($eventHandler, "onFeedI
 
 OW::getEventManager()->bind('admin.add_admin_notification', array($eventHandler, "onCollectAdminNotifications"));
 OW::getEventManager()->bind(BASE_CMP_QuickLinksWidget::EVENT_NAME, array($eventHandler, 'onCollectQuickLinks'));
+OW::getEventManager()->bind("base.collect_seo_meta_data", array($eventHandler, 'onCollectMetaData'));
 
 GROUPS_CLASS_ConsoleBridge::getInstance()->init();
 GROUPS_CLASS_ContentProvider::getInstance()->init();

@@ -86,10 +86,10 @@ class GROUPS_CTRL_Groups extends OW_ActionController
             throw new Redirect404Exception();
         }
         
-        OW::getDocument()->addMetaInfo('og:title', strip_tags($groupDto->title), 'property');
-        OW::getDocument()->addMetaInfo('og:description', strip_tags($groupDto->description), 'property');
-        OW::getDocument()->addMetaInfo('og:url', OW_URL_HOME . OW::getRequest()->getRequestUri(), 'property');
-        OW::getDocument()->addMetaInfo('og:site_name', OW::getConfig()->getValue('base', 'site_name'), 'property');
+//        OW::getDocument()->addMetaInfo('og:title', strip_tags($groupDto->title), 'property');
+//        OW::getDocument()->addMetaInfo('og:description', strip_tags($groupDto->description), 'property');
+//        OW::getDocument()->addMetaInfo('og:url', OW_URL_HOME . OW::getRequest()->getRequestUri(), 'property');
+//        OW::getDocument()->addMetaInfo('og:site_name', OW::getConfig()->getValue('base', 'site_name'), 'property');
 
         $language = OW::getLanguage();
 
@@ -253,6 +253,17 @@ class GROUPS_CTRL_Groups extends OW_ActionController
         }
 
         $this->assign('componentPanel', $componentPanel->render());
+
+        $params = array(
+            "sectionKey" => "groups",
+            "entityKey" => "groupPage",
+            "title" => "groups+meta_title_groups_page",
+            "description" => "groups+meta_desc_groups_page",
+            "keywords" => "groups+meta_keywords_groups_page",
+            "vars" => array( "group_title" => $groupDto->title, "group_description" => $groupDto->description )
+        );
+
+        OW::getEventManager()->trigger(new OW_Event("base.provide_page_meta_info", $params));
     }
 
     public function create()
@@ -552,6 +563,16 @@ class GROUPS_CTRL_Groups extends OW_ActionController
         $this->assign('listType', 'popular');
 
         $this->displayGroupList($dtoList, $paging, $menu);
+
+        $params = array(
+            "sectionKey" => "groups",
+            "entityKey" => "mostPopular",
+            "title" => "groups+meta_title_most_popular",
+            "description" => "groups+meta_desc_most_popular",
+            "keywords" => "groups+meta_keywords_most_popular"
+        );
+
+        OW::getEventManager()->trigger(new OW_Event("base.provide_page_meta_info", $params));
     }
 
     public function latestList()
@@ -585,6 +606,16 @@ class GROUPS_CTRL_Groups extends OW_ActionController
         $this->assign('listType', 'latest');
 
         $this->displayGroupList($dtoList, $paging, $menu);
+
+        $params = array(
+            "sectionKey" => "groups",
+            "entityKey" => "latest",
+            "title" => "groups+meta_title_latest",
+            "description" => "groups+meta_desc_latest",
+            "keywords" => "groups+meta_keywords_latest"
+        );
+
+        OW::getEventManager()->trigger(new OW_Event("base.provide_page_meta_info", $params));
     }
 
     public function inviteList()
@@ -809,6 +840,19 @@ class GROUPS_CTRL_Groups extends OW_ActionController
         $this->assign('listType', 'user');
 
         $this->displayGroupList($dtoList, $paging);
+
+        $vars = BOL_SeoService::getInstance()->getUserMetaInfo($userDto);
+
+        $params = array(
+            "sectionKey" => "groups",
+            "entityKey" => "userGroups",
+            "title" => "groups+meta_title_user_groups",
+            "description" => "groups+meta_desc_user_groups",
+            "keywords" => "groups+meta_keywords_user_groups",
+            "vars" => $vars
+        );
+
+        OW::getEventManager()->trigger(new OW_Event("base.provide_page_meta_info", $params));
     }
 
     private function displayGroupList( $list, $paging, $menu = null )
@@ -918,6 +962,17 @@ class GROUPS_CTRL_Groups extends OW_ActionController
         $this->addComponent('groupBriefInfo', new GROUPS_CMP_BriefInfo($groupId));
         
         $this->assign("groupId", $groupId);
+
+        $params = array(
+            "sectionKey" => "groups",
+            "entityKey" => "groupUsers",
+            "title" => "groups+meta_title_group_users",
+            "description" => "groups+meta_desc_group_users",
+            "keywords" => "groups+meta_keywords_group_users",
+            "vars" => array( "group_title" => $groupDto->title )
+        );
+
+        OW::getEventManager()->trigger(new OW_Event("base.provide_page_meta_info", $params));
     }
 
     private function getGroupListMenu()
