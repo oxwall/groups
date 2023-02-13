@@ -72,6 +72,11 @@ class GROUPS_BOL_Group extends OW_Entity
     public $userId;
 
     /**
+     * @var string
+     */
+    public $privacy;
+
+    /**
      *
      * @var string
      */
