@@ -46,6 +46,8 @@ class GROUPS_CTRL_Groups extends OW_ActionController
 
     public function __construct()
     {
+        parent::__construct();
+
         $this->service = GROUPS_BOL_Service::getInstance();
 
         if ( !OW::getRequest()->isAjax() )
@@ -1285,30 +1287,32 @@ class GROUPS_UserList extends BASE_CMP_Users
 
 class GROUPS_GroupForm extends Form
 {
+    const PLUGIN_KEY = GROUPS_BOL_Service::PLUGIN_KEY;
+
     public function __construct( $formName )
     {
-        parent::__construct($formName);
+        parent::__construct($formName, self::PLUGIN_KEY);
 
         $this->setEnctype(Form::ENCTYPE_MULTYPART_FORMDATA);
 
         $language = OW::getLanguage();
 
-        $field = new TextField('title');
+        $field = new TextField('title', self::PLUGIN_KEY);
         $field->setRequired(true);
         $field->setLabel($language->text('groups', 'create_field_title_label'));
         $this->addElement($field);
 
-        $field = new WysiwygTextarea('description');
+        $field = new WysiwygTextarea('description', self::PLUGIN_KEY);
         $field->setLabel($language->text('groups', 'create_field_description_label'));
         $field->setRequired(true);
         $this->addElement($field);
 
-        $field = new GROUPS_Image('image');
+        $field = new GROUPS_Image('image', self::PLUGIN_KEY);
         $field->setLabel($language->text('groups', 'create_field_image_label'));
         $field->addValidator(new GROUPS_ImageValidator());
         $this->addElement($field);
 
-        $whoCanView = new RadioField('whoCanView');
+        $whoCanView = new RadioField('whoCanView', self::PLUGIN_KEY);
         $whoCanView->setRequired();
         $whoCanView->addOptions(
             array(
@@ -1316,10 +1320,16 @@ class GROUPS_GroupForm extends Form
                 GROUPS_BOL_Service::WCV_INVITE => $language->text('groups', 'form_who_can_view_invite')
             )
         );
+
+        $whoCanView->setOptionElementIds([
+            GROUPS_BOL_Service::WCV_ANYONE => 'input_' . $this->getName() . '_' . $whoCanView->getName() . '_' . GROUPS_BOL_Service::WCV_ANYONE,
+            GROUPS_BOL_Service::WCV_INVITE => 'input_' . $this->getName() . '_' . $whoCanView->getName() . '_' . GROUPS_BOL_Service::WCV_INVITE
+        ]);
+
         $whoCanView->setLabel($language->text('groups', 'form_who_can_view_label'));
         $this->addElement($whoCanView);
 
-        $whoCanInvite = new RadioField('whoCanInvite');
+        $whoCanInvite = new RadioField('whoCanInvite', self::PLUGIN_KEY);
         $whoCanInvite->setRequired();
         $whoCanInvite->addOptions(
             array(
@@ -1327,6 +1337,12 @@ class GROUPS_GroupForm extends Form
                 GROUPS_BOL_Service::WCI_CREATOR => $language->text('groups', 'form_who_can_invite_creator')
             )
         );
+
+        $whoCanInvite->setOptionElementIds([
+            GROUPS_BOL_Service::WCI_PARTICIPANT => 'input_' . $this->getName() . '_' . $whoCanView->getName() . '_' . GROUPS_BOL_Service::WCI_PARTICIPANT,
+            GROUPS_BOL_Service::WCI_CREATOR => 'input_' . $this->getName() . '_' . $whoCanView->getName() . '_' . GROUPS_BOL_Service::WCI_CREATOR
+        ]);
+
         $whoCanInvite->setLabel($language->text('groups', 'form_who_can_invite_label'));
         $this->addElement($whoCanInvite);
     }
@@ -1414,7 +1430,7 @@ class GROUPS_CreateGroupForm extends GROUPS_GroupForm
 
         $this->getElement('title')->addValidator(new GROUPS_UniqueValidator());
 
-        $field = new Submit('save');
+        $field = new Submit('save', self::PLUGIN_KEY);
         $field->setValue(OW::getLanguage()->text('groups', 'create_submit_btn_label'));
         $this->addElement($field);
     }
@@ -1491,7 +1507,7 @@ class GROUPS_EditGroupForm extends GROUPS_GroupForm
         $this->getElement('whoCanView')->setValue($group->whoCanView);
         $this->getElement('whoCanInvite')->setValue($group->whoCanInvite);
 
-        $field = new Submit('save');
+        $field = new Submit('save', self::PLUGIN_KEY);
         $field->setValue(OW::getLanguage()->text('groups', 'edit_submit_btn_label'));
         $this->addElement($field);
     }
