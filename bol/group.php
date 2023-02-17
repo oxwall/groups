@@ -93,4 +93,9 @@ class GROUPS_BOL_Group extends OW_Entity
      * @var string 
      */
     public $status = self::STATUS_ACTIVE;
+
+    public function __construct()
+    {
+        $this->privacy = GROUPS_BOL_Service::PRIVACY_EVERYBODY;
+    }
 }

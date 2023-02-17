@@ -1461,7 +1461,7 @@ class GROUPS_CreateGroupForm extends GROUPS_GroupForm
         }
 
         $group = $this->processGroup($groupDto);
-        
+
         $is_forum_connected = OW::getConfig()->getValue('groups', 'is_forum_connected');
         // Add forum group
         if ( $is_forum_connected )
