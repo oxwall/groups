@@ -38,6 +38,8 @@
  */
 class GROUPS_BOL_Service
 {
+    const PLUGIN_KEY = 'groups';
+
     const IMAGE_WIDTH_SMALL = 100;
     const IMAGE_WIDTH_BIG = 400;
     
